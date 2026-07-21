@@ -1,16 +1,32 @@
 package httpserver
 
-import "net/http"
+import (
+	"context"
+	"net/http"
 
-const (
-	defaultAddr = ":8080"
+	"github.com/elijaharch/mentorship-task-golang/pkg/config"
 )
 
 type Server struct {
-	Addr    string
-	Handler http.Handler
+	httpServer *http.Server
 }
 
-func NewServer(...opts) *Server {
-	return &Server{Addr: defaultAddr}
+func New(addr string, handler http.Handler, cfg config.ServerConfig) *Server {
+	return &Server{
+		httpServer: &http.Server{
+			Addr:         addr,
+			Handler:      handler,
+			ReadTimeout:  cfg.ReadTimeout,
+			WriteTimeout: cfg.WriteTimeout,
+			IdleTimeout:  cfg.IdleTimeout,
+		},
+	}
+}
+
+func (s *Server) Run() error {
+	return s.httpServer.ListenAndServe()
+}
+
+func (s *Server) Shutdown(ctx context.Context) error {
+	return s.httpServer.Shutdown(ctx)
 }
