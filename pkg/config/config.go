@@ -9,11 +9,15 @@ import (
 )
 
 type Config struct {
-	Port        string
 	Environment string
-	LogLevel    string
+	Log         LogConfig
 	Database    DatabaseConfig
 	Server      ServerConfig
+}
+
+type LogConfig struct {
+	Level  string
+	Format string
 }
 
 type DatabaseConfig struct {
@@ -29,6 +33,7 @@ type DatabaseConfig struct {
 }
 
 type ServerConfig struct {
+	Port         string
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 	IdleTimeout  time.Duration
@@ -36,9 +41,11 @@ type ServerConfig struct {
 
 func Load() *Config {
 	return &Config{
-		Port:        getEnv("PORT", "8080"),
 		Environment: getEnv("ENVIRONMENT", "development"),
-		LogLevel:    getEnv("LOG_LEVEL", "info"),
+		Log: LogConfig{
+			Level:  getEnv("LOG_LEVEL", "info"),
+			Format: getEnv("LOG_FORMAT", "text"),
+		},
 		Database: DatabaseConfig{
 			Host:         getEnv("DB_HOST", "localhost"),
 			Port:         getEnv("DB_PORT", "5432"),
@@ -51,6 +58,7 @@ func Load() *Config {
 			MaxLifetime:  getEnvAsDuration("DB_MAX_LIFETIME", "5m"),
 		},
 		Server: ServerConfig{
+			Port:         getEnv("PORT", "8080"),
 			ReadTimeout:  getEnvAsDuration("SERVER_READ_TIMEOUT", "10s"),
 			WriteTimeout: getEnvAsDuration("SERVER_WRITE_TIMEOUT", "10s"),
 			IdleTimeout:  getEnvAsDuration("SERVER_IDLE_TIMEOUT", "60s"),

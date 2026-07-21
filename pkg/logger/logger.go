@@ -1,24 +1,33 @@
 package logger
 
 import (
-	"log"
-	"os"
+	"io"
+	"log/slog"
+	"strings"
 )
 
-var (
-	InfoLogger  *log.Logger
-	ErrorLogger *log.Logger
-)
+func New(out io.Writer, level, format string) *slog.Logger {
+	opts := &slog.HandlerOptions{Level: parseLevel(level)}
 
-func Init() {
-	InfoLogger = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	var handler slog.Handler
+	switch strings.ToLower(format) {
+	case "json":
+		handler = slog.NewJSONHandler(out, opts)
+	default:
+		handler = slog.NewTextHandler(out, opts)
+	}
+	return slog.New(handler)
 }
 
-func Info(v ...interface{}) {
-	InfoLogger.Println(v...)
-}
-
-func Error(v ...interface{}) {
-	ErrorLogger.Println(v...)
+func parseLevel(s string) slog.Level {
+	switch strings.ToLower(s) {
+	case "debug":
+		return slog.LevelDebug
+	case "warn", "warning":
+		return slog.LevelWarn
+	case "error":
+		return slog.LevelError
+	default:
+		return slog.LevelInfo
+	}
 }
