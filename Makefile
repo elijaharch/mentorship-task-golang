@@ -5,11 +5,11 @@ endif
 
 .PHONY: db-up
 db-up:
-	docker compose up -d db
+	docker compose up -d database
 
 .PHONY: db-down
 db-down:
-	docker compose down db
+	docker compose down database
 
 .PHONY: migrate-up
 migrate-up:
