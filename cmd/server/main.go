@@ -18,7 +18,7 @@ func main() {
 
 	router := http.NewServeMux()
 
-	srv := server.New(cfg.Server, router)
+	srv := server.New(cfg.Server, router, log)
 
 	if err := srv.Run(); err != nil {
 		slog.Error("server failed", "err", err)
