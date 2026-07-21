@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"context"
@@ -11,10 +11,10 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func New(addr string, handler http.Handler, cfg config.ServerConfig) *Server {
+func New(cfg config.ServerConfig, handler http.Handler) *Server {
 	return &Server{
 		httpServer: &http.Server{
-			Addr:         addr,
+			Addr:         ":" + cfg.Port,
 			Handler:      handler,
 			ReadTimeout:  cfg.ReadTimeout,
 			WriteTimeout: cfg.WriteTimeout,
