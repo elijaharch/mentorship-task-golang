@@ -2,7 +2,11 @@
 -- +goose StatementBegin
 CREATE TABLE numbers (
 		id SERIAL PRIMARY KEY,
-		number BIGINT NOT NULL,
+		a NUMERIC NOT NULL,
+		b NUMERIC NOT NULL,
+		operation VARCHAR(10) NOT NULL,
+		result NUMERIC NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 -- +goose StatementEnd
 
