@@ -11,7 +11,7 @@ import (
 type Config struct {
 	Environment string
 	Log         LogConfig
-	Database    DatabaseConfig
+	Database    DBConfig
 	Server      ServerConfig
 }
 
@@ -20,7 +20,7 @@ type LogConfig struct {
 	Format string
 }
 
-type DatabaseConfig struct {
+type DBConfig struct {
 	Host     string
 	Port     string
 	User     string
@@ -43,7 +43,7 @@ func Load() *Config {
 			Level:  getEnv("LOG_LEVEL", "info"),
 			Format: getEnv("LOG_FORMAT", "text"),
 		},
-		Database: DatabaseConfig{
+		Database: DBConfig{
 			Host:     getEnv("DB_HOST", "localhost"),
 			Port:     getEnv("DB_PORT", "5432"),
 			User:     getEnv("DB_USER", "postgres"),
@@ -60,14 +60,9 @@ func Load() *Config {
 	}
 }
 
-func (c *Config) DSN() string {
+func (c *DBConfig) DSN() string {
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		c.Database.Host,
-		c.Database.Port,
-		c.Database.User,
-		c.Database.Password,
-		c.Database.Name,
-		c.Database.SSLMode,
+		c.Host, c.Port, c.User, c.Password, c.Name, c.SSLMode,
 	)
 }
 
