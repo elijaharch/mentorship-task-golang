@@ -9,6 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/elijaharch/mentorship-task-golang/internal/calculation/handler"
+	"github.com/elijaharch/mentorship-task-golang/internal/calculation/repository"
+	"github.com/elijaharch/mentorship-task-golang/internal/calculation/service"
 	"github.com/elijaharch/mentorship-task-golang/internal/db"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
 	"github.com/elijaharch/mentorship-task-golang/pkg/config"
@@ -38,6 +41,11 @@ func run() error {
 	defer database.Close()
 
 	router := http.NewServeMux()
+
+	calcRepo := repository.New(database)
+	calcService := service.New(calcRepo)
+	calcHandler := handler.New(calcService, log)
+	calcHandler.RegisterRoutes(router)
 
 	srv := server.New(cfg.Server, router, log)
 
