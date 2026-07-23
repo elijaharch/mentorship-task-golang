@@ -32,7 +32,7 @@ func New(cfg config.ServerConfig, handler http.Handler, logger *slog.Logger) *Se
 func (s *Server) Run(ctx context.Context) error {
 	errCh := make(chan error, 1)
 	go func() {
-		s.logger.Info("http server listening", "addr", s.httpServer.Addr)
+		s.logger.Info("starting http server", "addr", s.httpServer.Addr)
 		err := s.httpServer.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			errCh <- err
