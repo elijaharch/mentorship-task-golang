@@ -1,17 +1,25 @@
 package handler
 
 import (
+	"context"
 	"log/slog"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation/service"
+	"github.com/elijaharch/mentorship-task-golang/internal/calculation"
 )
 
+type Service interface {
+	Create(ctx context.Context, input calculation.Input) (calculation.Calculation, error)
+	Get(ctx context.Context, input calculation.Input) (calculation.Calculation, error)
+	List(ctx context.Context, options calculation.ListOptions) ([]calculation.Calculation, error)
+	Delete(ctx context.Context, id int64) error
+}
+
 type Handler struct {
-	service service.Service
+	service Service
 	logger  *slog.Logger
 }
 
-func New(service service.Service, logger *slog.Logger) *Handler {
+func New(service Service, logger *slog.Logger) *Handler {
 	return &Handler{
 		service: service,
 		logger:  logger,
