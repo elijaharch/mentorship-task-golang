@@ -9,7 +9,8 @@ import (
 
 type Service interface {
 	Create(ctx context.Context, input calculation.Input) (calculation.Calculation, error)
-	Get(ctx context.Context, input calculation.Input) (calculation.Calculation, error)
+	Get(ctx context.Context, id int64) (calculation.Calculation, error)
+	Update(ctx context.Context, id int64, input calculation.Input) (calculation.Calculation, error)
 	List(ctx context.Context, options calculation.ListOptions) ([]calculation.Calculation, error)
 	Delete(ctx context.Context, id int64) error
 }
