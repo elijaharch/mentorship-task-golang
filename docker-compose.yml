@@ -9,7 +9,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: mentorship-db
-      DB_SSL_MODE: disable
+      DB_SSLMODE: disable
       PORT: 8080
       LOG_LEVEL: info
       LOG_FORMAT: json

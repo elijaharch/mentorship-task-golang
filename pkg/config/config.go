@@ -49,7 +49,7 @@ func Load() *Config {
 			User:     getEnv("DB_USER", "postgres"),
 			Password: getEnv("DB_PASSWORD", ""),
 			Name:     getEnv("DB_NAME", "mentorship-task-golang"),
-			SSLMode:  getEnv("DB_SSL_MODE", "disable"),
+			SSLMode:  getEnv("DB_SSLMODE", "disable"),
 		},
 		Server: ServerConfig{
 			Port:            getEnv("PORT", "8080"),
