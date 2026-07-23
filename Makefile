@@ -53,5 +53,5 @@ test-integration:
 	@go test -tags integration ./test/integration/...
 
 .PHONY: run
+run:
 	@go run cmd/server/main.go
-
