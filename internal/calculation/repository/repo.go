@@ -2,9 +2,11 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/elijaharch/mentorship-task-golang/internal/calculation"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -35,6 +37,35 @@ func (r *Repository) Create(ctx context.Context, calc calculation.Calculation) (
 	)
 	if err != nil {
 		return calculation.Calculation{}, fmt.Errorf("create calculation: %w", err)
+	}
+
+	return calc, nil
+}
+
+func (r *Repository) Get(ctx context.Context, id int64) (calculation.Calculation, error) {
+	const query = `
+		SELECT id, a, b, operation, result, created_at
+		FROM numbers
+		WHERE id=$1`
+
+	var calc calculation.Calculation
+	err := r.pool.QueryRow(ctx,
+		query,
+		id,
+	).Scan(
+		&calc.ID,
+		&calc.A,
+		&calc.B,
+		&calc.Operation,
+		&calc.Result,
+		&calc.CreatedAt,
+	)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return calculation.Calculation{}, calculation.ErrNotFound
+	}
+	if err != nil {
+		return calculation.Calculation{}, fmt.Errorf("get calculation: %w", err)
 	}
 
 	return calc, nil

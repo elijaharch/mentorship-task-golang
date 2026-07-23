@@ -8,7 +8,8 @@ import (
 )
 
 type Repository interface {
-	Create(ctx context.Context, calculation calculation.Calculation) (calculation.Calculation, error)
+	Create(ctx context.Context, calc calculation.Calculation) (calculation.Calculation, error)
+	Get(ctx context.Context, id int64) (calculation.Calculation, error)
 }
 
 type Service struct {
@@ -59,4 +60,8 @@ func (s *Service) Create(ctx context.Context, input calculation.Input) (calculat
 	}
 
 	return s.repo.Create(ctx, calc)
+}
+
+func (s *Service) Get(ctx context.Context, id int64) (calculation.Calculation, error) {
+	return s.repo.Get(ctx, id)
 }
