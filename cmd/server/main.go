@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/core/db"
+	"github.com/elijaharch/mentorship-task-golang/internal/db"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
 	"github.com/elijaharch/mentorship-task-golang/pkg/config"
 	"github.com/elijaharch/mentorship-task-golang/pkg/logger"
