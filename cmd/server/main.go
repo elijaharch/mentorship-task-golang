@@ -9,13 +9,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation/handler"
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation/repository"
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation/service"
+	"github.com/elijaharch/mentorship-task-golang/internal/config"
 	"github.com/elijaharch/mentorship-task-golang/internal/db"
+	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/handler"
+	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/repository"
+	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/service"
+	"github.com/elijaharch/mentorship-task-golang/internal/logger"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
-	"github.com/elijaharch/mentorship-task-golang/pkg/config"
-	"github.com/elijaharch/mentorship-task-golang/pkg/logger"
 )
 
 func main() {

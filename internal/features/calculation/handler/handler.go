@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
 )
 
 const maxRequestBodyBytes = 1 << 20

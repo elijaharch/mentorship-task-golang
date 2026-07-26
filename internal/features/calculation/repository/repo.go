@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -15,9 +15,7 @@ type Repository struct {
 }
 
 func New(pool *pgxpool.Pool) *Repository {
-	return &Repository{
-		pool: pool,
-	}
+	return &Repository{pool: pool}
 }
 
 func (r *Repository) Create(ctx context.Context, calc calculation.Calculation) (calculation.Calculation, error) {

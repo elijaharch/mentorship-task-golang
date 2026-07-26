@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/elijaharch/mentorship-task-golang/pkg/config"
+	"github.com/elijaharch/mentorship-task-golang/internal/config"
 )
 
 type Server struct {

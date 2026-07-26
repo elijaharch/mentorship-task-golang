@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"github.com/elijaharch/mentorship-task-golang/pkg/config"
+	"github.com/elijaharch/mentorship-task-golang/internal/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

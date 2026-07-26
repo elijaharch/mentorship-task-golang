@@ -3,7 +3,7 @@ package handler
 import (
 	"time"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
 )
 
 type calculationRequest struct {

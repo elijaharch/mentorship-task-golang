@@ -4,7 +4,7 @@ import (
 	"context"
 	"math"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/calculation"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
 )
 
 type Repository interface {
@@ -18,9 +18,7 @@ type Service struct {
 }
 
 func New(repo Repository) *Service {
-	return &Service{
-		repo: repo,
-	}
+	return &Service{repo: repo}
 }
 
 func (s *Service) Create(ctx context.Context, input calculation.Input) (calculation.Calculation, error) {
