@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -40,12 +39,12 @@ func run() error {
 	}
 	defer database.Close()
 
-	router := http.NewServeMux()
-
 	calcRepo := repository.New(database)
-	calcService := service.New(calcRepo)
-	calcHandler := handler.New(calcService, log)
-	calcHandler.RegisterRoutes(router)
+	calcSvc := service.New(calcRepo)
+
+	router := server.NewRouter(server.Handler{
+		Calculation: handler.New(calcSvc, log),
+	}, log)
 
 	srv := server.New(cfg.Server, router, log)
 
