@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )

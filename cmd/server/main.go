@@ -10,11 +10,11 @@ import (
 
 	"github.com/elijaharch/mentorship-task-golang/internal/config"
 	"github.com/elijaharch/mentorship-task-golang/internal/db"
-	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/handler"
-	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/repository"
-	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/service"
+	"github.com/elijaharch/mentorship-task-golang/internal/handler"
 	"github.com/elijaharch/mentorship-task-golang/internal/logger"
+	"github.com/elijaharch/mentorship-task-golang/internal/repository"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
+	"github.com/elijaharch/mentorship-task-golang/internal/service"
 )
 
 func main() {

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
 )
 
 const maxRequestBodyBytes = 1 << 20
@@ -23,14 +23,14 @@ type Service interface {
 }
 
 type Handler struct {
-	service Service
-	logger  *slog.Logger
+	svc    Service
+	logger *slog.Logger
 }
 
-func New(service Service, logger *slog.Logger) *Handler {
+func New(svc Service, logger *slog.Logger) *Handler {
 	return &Handler{
-		service: service,
-		logger:  logger,
+		svc:    svc,
+		logger: logger,
 	}
 }
 
@@ -64,7 +64,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	calc, err := h.service.Create(r.Context(), req.toInput())
+	calc, err := h.svc.Create(r.Context(), req.toInput())
 	if err != nil {
 		h.respondServiceError(w, r, "create calculation", err)
 		return
@@ -81,6 +81,24 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 			"err",
 			err,
 		)
+	}
+}
+
+func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
+	reqID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || reqID <= 0 {
+		h.respondError(w, r, http.StatusBadRequest, "invalid_id", "invalid calculation id")
+		return
+	}
+
+	calc, err := h.svc.Get(r.Context(), reqID)
+	if err != nil {
+		h.respondServiceError(w, r, "get calculation", err)
+		return
+	}
+
+	if err := writeJSON(w, http.StatusOK, newCalculationResponse(calc)); err != nil {
+		h.logger.ErrorContext(r.Context(), "write get calculation response", "err", err)
 	}
 }
 
@@ -124,7 +142,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	calc, err := h.service.Update(r.Context(), reqID, req.toInput())
+	calc, err := h.svc.Update(r.Context(), reqID, req.toInput())
 	if err != nil {
 		h.respondServiceError(w, r, "update calculation", err)
 		return

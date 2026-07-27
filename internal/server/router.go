@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/features/calculation/handler"
+	"github.com/elijaharch/mentorship-task-golang/internal/handler"
 )
 
 type Handler struct {

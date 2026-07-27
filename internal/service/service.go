@@ -4,7 +4,7 @@ import (
 	"context"
 	"math"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/features/calculation/domain"
+	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
 )
 
 type Repository interface {
