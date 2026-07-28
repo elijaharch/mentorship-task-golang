@@ -5,7 +5,7 @@ services:
       - "8080:8080"
     environment:
       DB_HOST: database
-      DB_PORT: 5432
+      DB_PORT: 5433
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: mentorship-db
@@ -17,7 +17,6 @@ services:
       database:
         condition: service_healthy
     restart: unless-stopped
-
   database:
     image: postgres:17-alpine
     environment:
@@ -25,7 +24,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: mentorship-db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -34,6 +33,5 @@ services:
       timeout: 2s
       retries: 20
     restart: unless-stopped
-
 volumes:
   pgdata:
