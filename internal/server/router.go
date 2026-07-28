@@ -22,5 +22,5 @@ func NewRouter(h Handler, logger *slog.Logger) http.Handler {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	return r
+	return chain(r, loggingMiddleware(logger))
 }
