@@ -11,6 +11,7 @@ type Repository interface {
 	Create(ctx context.Context, calc calculation.Calculation) (calculation.Calculation, error)
 	Get(ctx context.Context, id int64) (calculation.Calculation, error)
 	Update(ctx context.Context, id int64, calc calculation.Calculation) (calculation.Calculation, error)
+	Delete(ctx context.Context, id int64) error
 }
 
 type Service struct {
@@ -41,6 +42,10 @@ func (s *Service) Update(ctx context.Context, id int64, input calculation.Input)
 	}
 
 	return s.repo.Update(ctx, id, calc)
+}
+
+func (s *Service) Delete(ctx context.Context, id int64) error {
+	return s.repo.Delete(ctx, id)
 }
 
 func validate(input calculation.Input) error {

@@ -15,7 +15,7 @@ type Service interface {
 	Get(ctx context.Context, id int64) (calculation.Calculation, error)
 	Update(ctx context.Context, id int64, input calculation.Input) (calculation.Calculation, error)
 	// List(ctx context.Context, options calculation.ListOptions) ([]calculation.Calculation, error)
-	// Delete(ctx context.Context, id int64) error
+	Delete(ctx context.Context, id int64) error
 }
 
 type Handler struct {
@@ -117,6 +117,22 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 			err,
 		)
 	}
+}
+
+func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
+	reqID, err := parseID(r, "id")
+	if err != nil || reqID <= 0 {
+		h.writeError(w, r, http.StatusBadRequest, "invalid_id", "invalid calculation id")
+		return
+	}
+
+	err = h.svc.Delete(r.Context(), reqID)
+	if err != nil {
+		h.writeServiceError(w, r, "delete calculation", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func parseID(r *http.Request, key string) (int64, error) {

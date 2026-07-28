@@ -100,3 +100,19 @@ func (r *Repository) Update(ctx context.Context, id int64, calc calculation.Calc
 
 	return calc, nil
 }
+
+func (r *Repository) Delete(ctx context.Context, id int64) error {
+	const query = `
+		DELETE FROM numbers
+		WHERE id = $1`
+
+	commandTag, err := r.pool.Exec(ctx, query, id)
+	if err != nil {
+		return fmt.Errorf("delete calculation: %w", err)
+	}
+	if commandTag.RowsAffected() == 0 {
+		return calculation.ErrNotFound
+	}
+
+	return nil
+}

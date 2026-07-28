@@ -17,6 +17,7 @@ func NewRouter(h Handler, logger *slog.Logger) http.Handler {
 	r.HandleFunc("POST /calculations", h.Calculation.Create)
 	r.HandleFunc("GET /calculations/{id}", h.Calculation.Get)
 	r.HandleFunc("PUT /calculations/{id}", h.Calculation.Update)
+	r.HandleFunc("DELETE /calculations/{id}", h.Calculation.Delete)
 
 	r.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
