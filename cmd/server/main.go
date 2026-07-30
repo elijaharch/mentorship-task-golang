@@ -15,6 +15,7 @@ import (
 	"github.com/elijaharch/mentorship-task-golang/internal/repository"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
 	"github.com/elijaharch/mentorship-task-golang/internal/service"
+	"github.com/elijaharch/mentorship-task-golang/migrations"
 )
 
 func main() {
@@ -38,6 +39,11 @@ func run() error {
 		return fmt.Errorf("open database: %w", err)
 	}
 	defer database.Close()
+
+	log.Info("applying migrations")
+	if err := db.Migrate(ctx, database, migrations.FS); err != nil {
+		return err
+	}
 
 	calcRepo := repository.New(database)
 	calcSvc := service.New(calcRepo)

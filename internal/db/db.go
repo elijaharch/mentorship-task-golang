@@ -2,11 +2,15 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/fs"
 	"time"
 
 	"github.com/elijaharch/mentorship-task-golang/internal/config"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
 )
 
 func Open(ctx context.Context, cfg config.DBConfig) (*pgxpool.Pool, error) {
@@ -34,4 +38,21 @@ func Open(ctx context.Context, cfg config.DBConfig) (*pgxpool.Pool, error) {
 	}
 
 	return pool, nil
+}
+
+func Migrate(ctx context.Context, pool *pgxpool.Pool, migrationsFS fs.FS) error {
+	db := stdlib.OpenDBFromPool(pool)
+	defer db.Close()
+
+	goose.SetBaseFS(migrationsFS)
+	defer goose.SetBaseFS(nil)
+
+	if err := goose.SetDialect("postgres"); err != nil {
+		return fmt.Errorf("goose dialect: %w", err)
+	}
+	if err := goose.UpContext(ctx, db, "."); err != nil && !errors.Is(err, goose.ErrNoNextVersion) {
+		return fmt.Errorf("apply migrations: %w", err)
+	}
+
+	return nil
 }
