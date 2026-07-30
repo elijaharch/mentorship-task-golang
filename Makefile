@@ -86,3 +86,4 @@ tools:
 	go install golang.org/x/vuln/cmd/govulncheck@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	go install github.com/pressly/goose/v3/cmd/goose@latest
