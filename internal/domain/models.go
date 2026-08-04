@@ -22,6 +22,7 @@ type Calculation struct {
 	A         float64
 	B         float64
 	Operation Operation
+	CommandID int64
 	Result    float64
 	CreatedAt time.Time
 }
