@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
+	"github.com/elijaharch/mentorship-task-golang/internal/domain"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -18,7 +18,7 @@ func New(pool *pgxpool.Pool) *Repository {
 	return &Repository{pool: pool}
 }
 
-func (r *Repository) Create(ctx context.Context, calc calculation.Calculation) (calculation.Calculation, error) {
+func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domain.Calculation, error) {
 	const query = `
 		INSERT INTO numbers (a, b, operation, result, command_id)
 		VALUES ($1, $2, $3, $4, $5)
@@ -35,19 +35,19 @@ func (r *Repository) Create(ctx context.Context, calc calculation.Calculation) (
 		&calc.CreatedAt,
 	)
 	if err != nil {
-		return calculation.Calculation{}, fmt.Errorf("create calculation: %w", err)
+		return domain.Calculation{}, fmt.Errorf("create calculation: %w", err)
 	}
 
 	return calc, nil
 }
 
-func (r *Repository) Get(ctx context.Context, id int64) (calculation.Calculation, error) {
+func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, error) {
 	const query = `
 		SELECT id, a, b, operation, result, command_id, created_at
 		FROM numbers
 		WHERE id=$1`
 
-	var calc calculation.Calculation
+	var calc domain.Calculation
 	err := r.pool.QueryRow(ctx,
 		query,
 		id,
@@ -62,16 +62,16 @@ func (r *Repository) Get(ctx context.Context, id int64) (calculation.Calculation
 	)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return calculation.Calculation{}, calculation.ErrNotFound
+		return domain.Calculation{}, domain.ErrNotFound
 	}
 	if err != nil {
-		return calculation.Calculation{}, fmt.Errorf("get calculation: %w", err)
+		return domain.Calculation{}, fmt.Errorf("get calculation: %w", err)
 	}
 
 	return calc, nil
 }
 
-func (r *Repository) Update(ctx context.Context, id int64, calc calculation.Calculation) (calculation.Calculation, error) {
+func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculation) (domain.Calculation, error) {
 	const query = `
 		UPDATE numbers
 		SET a=$1, b=$2, operation=$3, result=$4, command_id=$5
@@ -96,10 +96,10 @@ func (r *Repository) Update(ctx context.Context, id int64, calc calculation.Calc
 		&calc.CreatedAt,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
-		return calculation.Calculation{}, calculation.ErrNotFound
+		return domain.Calculation{}, domain.ErrNotFound
 	}
 	if err != nil {
-		return calculation.Calculation{}, fmt.Errorf("update calculation: %w", err)
+		return domain.Calculation{}, fmt.Errorf("update calculation: %w", err)
 	}
 
 	return calc, nil
@@ -112,10 +112,10 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 
 	commandTag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
-		return fmt.Errorf("delete calculation: %w", err)
+		return fmt.Errorf("delete domain: %w", err)
 	}
 	if commandTag.RowsAffected() == 0 {
-		return calculation.ErrNotFound
+		return domain.ErrNotFound
 	}
 
 	return nil
