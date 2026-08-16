@@ -1,4 +1,4 @@
-package repository
+package numbers
 
 import (
 	"context"
@@ -20,8 +20,8 @@ func New(pool *pgxpool.Pool) *Repository {
 
 func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domain.Calculation, error) {
 	const query = `
-		INSERT INTO numbers (a, b, operation, result, command_id)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO numbers (a, b, operation, result)
+		VALUES ($1, $2, $3, $4)
 		RETURNING id, created_at`
 	err := r.pool.QueryRow(ctx,
 		query,
@@ -29,7 +29,6 @@ func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domai
 		calc.B,
 		calc.Operation,
 		calc.Result,
-		calc.CommandID,
 	).Scan(
 		&calc.ID,
 		&calc.CreatedAt,
@@ -43,7 +42,7 @@ func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domai
 
 func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, error) {
 	const query = `
-		SELECT id, a, b, operation, result, command_id, created_at
+		SELECT id, a, b, operation, result, created_at
 		FROM numbers
 		WHERE id=$1`
 
@@ -57,7 +56,6 @@ func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, err
 		&calc.B,
 		&calc.Operation,
 		&calc.Result,
-		&calc.CommandID,
 		&calc.CreatedAt,
 	)
 
@@ -74,9 +72,9 @@ func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, err
 func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculation) (domain.Calculation, error) {
 	const query = `
 		UPDATE numbers
-		SET a=$1, b=$2, operation=$3, result=$4, command_id=$5
-		WHERE id=$6
-		RETURNING id, a, b, operation, result, command_id, created_at`
+		SET a=$1, b=$2, operation=$3, result=$4
+		WHERE id=$5
+		RETURNING id, a, b, operation, result, created_at`
 
 	err := r.pool.QueryRow(ctx,
 		query,
@@ -84,7 +82,6 @@ func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculati
 		calc.B,
 		calc.Operation,
 		calc.Result,
-		calc.CommandID,
 		id,
 	).Scan(
 		&calc.ID,
@@ -92,7 +89,6 @@ func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculati
 		&calc.B,
 		&calc.Operation,
 		&calc.Result,
-		&calc.CommandID,
 		&calc.CreatedAt,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
