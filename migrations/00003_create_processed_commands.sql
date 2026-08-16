@@ -4,8 +4,8 @@ CREATE TABLE processed_commands (
 		command_type TEXT NOT NULL,
 		payload_hash BYTEA NOT NULL,
 		status TEXT NOT NULL CHECK (status IN ('completed', 'processing', 'failed')),
-		response_payload JSONB NOT NULL,
-		completed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		response_payload JSONB,
+		completed_at TIMESTAMPTZ,
 
 		CHECK (
 		(
