@@ -7,15 +7,29 @@ import (
 
 	"github.com/elijaharch/mentorship-task-golang/internal/domain"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
-type Repository struct {
-	pool *pgxpool.Pool
+type DBTX interface {
+	Exec(
+		ctx context.Context,
+		query string,
+		args ...any,
+	) (pgconn.CommandTag, error)
+
+	QueryRow(
+		ctx context.Context,
+		query string,
+		args ...any,
+	) pgx.Row
 }
 
-func New(pool *pgxpool.Pool) *Repository {
-	return &Repository{pool: pool}
+type Repository struct {
+	db DBTX
+}
+
+func New(db DBTX) *Repository {
+	return &Repository{db: db}
 }
 
 func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domain.Calculation, error) {
@@ -23,7 +37,7 @@ func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domai
 		INSERT INTO numbers (a, b, operation, result)
 		VALUES ($1, $2, $3, $4)
 		RETURNING id, created_at`
-	err := r.pool.QueryRow(ctx,
+	err := r.db.QueryRow(ctx,
 		query,
 		calc.A,
 		calc.B,
@@ -47,7 +61,7 @@ func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, err
 		WHERE id=$1`
 
 	var calc domain.Calculation
-	err := r.pool.QueryRow(ctx,
+	err := r.db.QueryRow(ctx,
 		query,
 		id,
 	).Scan(
@@ -76,7 +90,7 @@ func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculati
 		WHERE id=$5
 		RETURNING id, a, b, operation, result, created_at`
 
-	err := r.pool.QueryRow(ctx,
+	err := r.db.QueryRow(ctx,
 		query,
 		calc.A,
 		calc.B,
@@ -106,7 +120,7 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 		DELETE FROM numbers
 		WHERE id = $1`
 
-	commandTag, err := r.pool.Exec(ctx, query, id)
+	commandTag, err := r.db.Exec(ctx, query, id)
 	if err != nil {
 		return fmt.Errorf("delete calculation: %w", err)
 	}
