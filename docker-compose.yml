@@ -33,5 +33,16 @@ services:
       timeout: 2s
       retries: 20
     restart: unless-stopped
+  nats:
+    image: nats:2.14.5-alpine
+    container_name: nats-server
+    ports:
+      - "4222:4222" # Client port
+      - "8222:8222" # HTTP monitoring port
+    command: ["-js", "-sd", "/data"]
+    volumes:
+      - nats_data:/data
+    restart: unless-stopped
 volumes:
   pgdata:
+  nats_data:
