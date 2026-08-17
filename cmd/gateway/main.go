@@ -12,7 +12,7 @@ import (
 	"github.com/elijaharch/mentorship-task-golang/internal/db"
 	"github.com/elijaharch/mentorship-task-golang/internal/handler"
 	"github.com/elijaharch/mentorship-task-golang/internal/logger"
-	"github.com/elijaharch/mentorship-task-golang/internal/repository"
+	calc "github.com/elijaharch/mentorship-task-golang/internal/repository/calculation"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
 	"github.com/elijaharch/mentorship-task-golang/internal/service"
 	"github.com/elijaharch/mentorship-task-golang/migrations"
@@ -45,7 +45,7 @@ func run() error {
 		return err
 	}
 
-	calcRepo := repository.New(database)
+	calcRepo := calc.New(database)
 	calcSvc := service.New(calcRepo)
 
 	router := server.NewRouter(server.Handler{
