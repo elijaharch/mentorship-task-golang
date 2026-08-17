@@ -1,4 +1,4 @@
-package numbers
+package calculation
 
 import (
 	"context"
@@ -108,7 +108,7 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 
 	commandTag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
-		return fmt.Errorf("delete domain: %w", err)
+		return fmt.Errorf("delete calculation: %w", err)
 	}
 	if commandTag.RowsAffected() == 0 {
 		return domain.ErrNotFound
