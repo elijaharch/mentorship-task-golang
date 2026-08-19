@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/domain"
 )
 
 const maxRequestBodyBytes = 1 << 20
@@ -71,7 +71,7 @@ func (h *Handler) writeServiceError(
 	err error,
 ) {
 	switch {
-	case errors.Is(err, calculation.ErrNotFound):
+	case errors.Is(err, domain.ErrNotFound):
 		h.writeError(
 			w,
 			r,
@@ -79,7 +79,7 @@ func (h *Handler) writeServiceError(
 			"not_found",
 			err.Error(),
 		)
-	case errors.Is(err, calculation.ErrInvalidOperation):
+	case errors.Is(err, domain.ErrInvalidOperation):
 		h.writeError(
 			w,
 			r,
@@ -87,7 +87,7 @@ func (h *Handler) writeServiceError(
 			"invalid_operation",
 			err.Error(),
 		)
-	case errors.Is(err, calculation.ErrDivisionByZero):
+	case errors.Is(err, domain.ErrDivisionByZero):
 		h.writeError(
 			w,
 			r,
@@ -95,7 +95,7 @@ func (h *Handler) writeServiceError(
 			"division_by_zero",
 			err.Error(),
 		)
-	case errors.Is(err, calculation.ErrInvalidNumber):
+	case errors.Is(err, domain.ErrInvalidNumber):
 		h.writeError(
 			w,
 			r,

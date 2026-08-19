@@ -4,14 +4,14 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/handler"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/handler"
 )
 
-type Handler struct {
+type Handlers struct {
 	Calculation *handler.Handler
 }
 
-func NewRouter(h Handler, logger *slog.Logger) http.Handler {
+func NewRouter(h Handlers, logger *slog.Logger) http.Handler {
 	r := http.NewServeMux()
 
 	r.HandleFunc("POST /calculations", h.Calculation.Create)

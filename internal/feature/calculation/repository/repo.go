@@ -1,38 +1,29 @@
-package calculation
+package repository
 
 import (
 	"context"
 	"errors"
 	"fmt"
 
-	"github.com/elijaharch/mentorship-task-golang/internal/domain"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/domain"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type DBTX interface {
-	Exec(
-		ctx context.Context,
-		query string,
-		args ...any,
-	) (pgconn.CommandTag, error)
-
-	QueryRow(
-		ctx context.Context,
-		query string,
-		args ...any,
-	) pgx.Row
+	Exec(ctx context.Context, query string, args ...any) (pgconn.CommandTag, error)
+	QueryRow(ctx context.Context, query string, args ...any) pgx.Row
 }
 
-type Repository struct {
+type CalculationRepository struct {
 	db DBTX
 }
 
-func New(db DBTX) *Repository {
-	return &Repository{db: db}
+func New(db DBTX) *CalculationRepository {
+	return &CalculationRepository{db: db}
 }
 
-func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domain.Calculation, error) {
+func (r *CalculationRepository) Create(ctx context.Context, calc domain.Calculation) (domain.Calculation, error) {
 	const query = `
 		INSERT INTO numbers (a, b, operation, result)
 		VALUES ($1, $2, $3, $4)
@@ -54,7 +45,7 @@ func (r *Repository) Create(ctx context.Context, calc domain.Calculation) (domai
 	return calc, nil
 }
 
-func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, error) {
+func (r *CalculationRepository) Get(ctx context.Context, id int64) (domain.Calculation, error) {
 	const query = `
 		SELECT id, a, b, operation, result, created_at
 		FROM numbers
@@ -83,7 +74,7 @@ func (r *Repository) Get(ctx context.Context, id int64) (domain.Calculation, err
 	return calc, nil
 }
 
-func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculation) (domain.Calculation, error) {
+func (r *CalculationRepository) Update(ctx context.Context, id int64, calc domain.Calculation) (domain.Calculation, error) {
 	const query = `
 		UPDATE numbers
 		SET a=$1, b=$2, operation=$3, result=$4
@@ -115,7 +106,7 @@ func (r *Repository) Update(ctx context.Context, id int64, calc domain.Calculati
 	return calc, nil
 }
 
-func (r *Repository) Delete(ctx context.Context, id int64) error {
+func (r *CalculationRepository) Delete(ctx context.Context, id int64) error {
 	const query = `
 		DELETE FROM numbers
 		WHERE id = $1`

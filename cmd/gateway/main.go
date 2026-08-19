@@ -10,11 +10,11 @@ import (
 
 	"github.com/elijaharch/mentorship-task-golang/internal/config"
 	"github.com/elijaharch/mentorship-task-golang/internal/db"
-	"github.com/elijaharch/mentorship-task-golang/internal/handler"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/handler"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/repository"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/service"
 	"github.com/elijaharch/mentorship-task-golang/internal/logger"
-	calc "github.com/elijaharch/mentorship-task-golang/internal/repository/calculation"
 	"github.com/elijaharch/mentorship-task-golang/internal/server"
-	"github.com/elijaharch/mentorship-task-golang/internal/service"
 	"github.com/elijaharch/mentorship-task-golang/migrations"
 )
 
@@ -45,10 +45,10 @@ func run() error {
 		return err
 	}
 
-	calcRepo := calc.New(database)
+	calcRepo := repository.New(database)
 	calcSvc := service.New(calcRepo)
 
-	router := server.NewRouter(server.Handler{
+	router := server.NewRouter(server.Handlers{
 		Calculation: handler.New(calcSvc, log),
 	}, log)
 

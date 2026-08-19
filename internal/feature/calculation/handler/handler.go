@@ -7,14 +7,13 @@ import (
 	"net/http"
 	"strconv"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/domain"
 )
 
 type Service interface {
-	Create(ctx context.Context, input calculation.Input) (calculation.Calculation, error)
-	Get(ctx context.Context, id int64) (calculation.Calculation, error)
-	Update(ctx context.Context, id int64, input calculation.Input) (calculation.Calculation, error)
-	// List(ctx context.Context, options calculation.ListOptions) ([]calculation.Calculation, error)
+	Create(ctx context.Context, input domain.Input) (domain.Calculation, error)
+	Get(ctx context.Context, id int64) (domain.Calculation, error)
+	Update(ctx context.Context, id int64, input domain.Input) (domain.Calculation, error)
 	Delete(ctx context.Context, id int64) error
 }
 

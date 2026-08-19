@@ -3,17 +3,17 @@ package handler
 import (
 	"time"
 
-	calculation "github.com/elijaharch/mentorship-task-golang/internal/domain"
+	"github.com/elijaharch/mentorship-task-golang/internal/feature/calculation/domain"
 )
 
 type calculationRequest struct {
-	A         float64               `json:"a"`
-	B         float64               `json:"b"`
-	Operation calculation.Operation `json:"operation"`
+	A         float64          `json:"a"`
+	B         float64          `json:"b"`
+	Operation domain.Operation `json:"operation"`
 }
 
-func (r calculationRequest) toInput() calculation.Input {
-	return calculation.Input{
+func (r calculationRequest) toInput() domain.Input {
+	return domain.Input{
 		A:         r.A,
 		B:         r.B,
 		Operation: r.Operation,
@@ -21,15 +21,15 @@ func (r calculationRequest) toInput() calculation.Input {
 }
 
 type calculationResponse struct {
-	ID        int64                 `json:"id"`
-	A         float64               `json:"a"`
-	B         float64               `json:"b"`
-	Operation calculation.Operation `json:"operation"`
-	Result    float64               `json:"result"`
-	CreatedAt time.Time             `json:"created_at"`
+	ID        int64            `json:"id"`
+	A         float64          `json:"a"`
+	B         float64          `json:"b"`
+	Operation domain.Operation `json:"operation"`
+	Result    float64          `json:"result"`
+	CreatedAt time.Time        `json:"created_at"`
 }
 
-func newCalculationResponse(c calculation.Calculation) calculationResponse {
+func newCalculationResponse(c domain.Calculation) calculationResponse {
 	return calculationResponse{
 		ID:        c.ID,
 		A:         c.A,
@@ -47,8 +47,8 @@ type listResponse struct {
 }
 
 func newListResponse(
-	calculations []calculation.Calculation,
-	options calculation.ListOptions,
+	calculations []domain.Calculation,
+	options domain.ListOptions,
 ) listResponse {
 	items := make([]calculationResponse, 0, len(calculations))
 
